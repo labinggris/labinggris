@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { sanityClient } from 'sanity:client';
+
+export async function getStaticPaths() {
+  // Fetch all posts and their slugs
+  const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug.current)]`);
+  
+  // Return an array of routes for Astro to build
+  return posts.map((post) => {
+    return {
+      params: { slug: post.slug.current },
+      props: { post },
+    };
+  });
+}
+
+// Get the specific post data passed from getStaticPaths
+const { post } = Astro.props;
+---
+
+<Layout 
+	title={post.seo?.metaTitle || post.title} 
+	description={post.seo?.metaDescription || "A great article."} 
+	keywords={post.seo?.keywords}
+>
+	<article class="prose prose-invert lg:prose-xl">
+		<h1 class="text-4xl font-bold mb-4">{post.title}</h1>
+		<p class="text-gray-400">{post.content}</p>
+	</article>
+</Layout>

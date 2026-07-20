@@ -1,0 +1,36 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	keywords?: string[];
+}
+const { title, description, keywords } = Astro.props;
+// Join the array of keywords into a single comma-separated string for the meta tag
+const keywordString = keywords ? keywords.join(', ') : 'blog, tech, default';
+---
+
+<!doctype html>
+<html lang="en" class="bg-gray-950 text-white font-sans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="keywords" content={keywordString} />
+
+		<!-- Google Analytics via Partytown -->
+		<script is:inline type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_ID"></script>
+		<script is:inline type="text/partytown">
+			window.dataLayer = window.dataLayer || [];
+			window.gtag = function() { dataLayer.push(arguments); }
+			window.gtag('js', new Date());
+			window.gtag('config', 'G-YOUR_ID');
+		</script>
+	</head>
+	<body class="max-w-4xl mx-auto p-8">
+		<nav class="mb-12 border-b border-gray-800 pb-4">
+			<a href="/" class="text-xl font-bold text-purple-400">My Awesome Blog</a>
+		</nav>
+		<slot />
+	</body>
+</html>
